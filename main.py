@@ -58,3 +58,14 @@ async def edit_person(user_id: int, edit_person: Person, res: Response):
             res.status_code = 404
             return "Person not found"
 
+
+@app.delete("/app/{user_id}")
+async def delete_person(user_id: int, res: Response):
+    for person in persons:
+        if person["user_id"] == user_id:
+            persons.remove(person)
+            res.status_code = 200
+            return "Person Deleted"
+        else:
+            res.status_code = 404
+            return "Person not found"
