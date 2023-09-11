@@ -46,3 +46,15 @@ async def get_person(user_id: int, res: Response):
             res.status_code = 404
             return "Person not found"
             
+
+@app.put("/app/{user_id}")
+async def edit_person(user_id: int, edit_person: Person, res: Response):
+    for person in persons:
+        if person["user_id"] == user_id:
+            person["name"] = edit_person.name
+            res.status_code = 200
+            return person
+        else:
+            res.status_code = 404
+            return "Person not found"
+
