@@ -27,8 +27,8 @@ def add_person(person: schemas.PersonBase, db: Session = Depends(get_db)):
 
 
 @app.get("/", response_model=list[schemas.Person])
-def index(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    persons = crud.get_persons(db, skip=skip, limit=limit)
+def index(db: Session = Depends(get_db)):
+    persons = crud.get_persons(db)
     return persons
 
 
