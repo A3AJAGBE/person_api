@@ -1,71 +1,40 @@
-from fastapi import FastAPI, Response
-from pydantic import BaseModel
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
+
+import crud, models, schemas
+from database import SessionLocal, engine
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-persons = [
-    {
-        "name": "tola",
-        "user_id": 1
-    },
-    {
-        "name": "ngozi",
-        "user_id": 2
-    },
-    {
-        "name": "simi",
-        "user_id": 3
-    }
-]
 
-class Person(BaseModel):
-    name: str
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
-@app.get("/")
-async def index():
+@app.post("/api", response_model=schemas.Person)
+def add_person(person: schemas.PersonBase, db: Session = Depends(get_db)):
+    new_person = crud.get_person_by_name(db, name=person.name)
+    if new_person:
+        raise HTTPException(status_code=400, detail="Name exist already")
+    return crud.create_person(db=db, person=person)
+
+
+@app.get("/", response_model=list[schemas.Person])
+def index(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    persons = crud.get_persons(db, skip=skip, limit=limit)
     return persons
 
 
-@app.post("/api")
-async def add_person(new_person: Person, res: Response):
-    person = new_person.model_dump()
-    person["user_id"] = len(persons) + 1
-    persons.append(person)
-    res.status_code = 201
-    return "Person added successfully"
-
-
-@app.get("/api/{user_id}")
-async def get_person(user_id: int, res: Response):
-    for person in persons:
-        if person["user_id"] == user_id:
-            res.status_code = 200
-            return person
-        else:
-            res.status_code = 404
-            return "Person not found"
-            
-
-@app.put("/app/{user_id}")
-async def edit_person(user_id: int, edit_person: Person, res: Response):
-    for person in persons:
-        if person["user_id"] == user_id:
-            person["name"] = edit_person.name
-            res.status_code = 200
-            return person
-        else:
-            res.status_code = 404
-            return "Person not found"
-
-
-@app.delete("/app/{user_id}")
-async def delete_person(user_id: int, res: Response):
-    for person in persons:
-        if person["user_id"] == user_id:
-            persons.remove(person)
-            res.status_code = 200
-            return "Person Deleted"
-        else:
-            res.status_code = 404
-            return "Person not found"
+@app.get("/api/{user_id}", response_model=schemas.Person)
+def read_person(user_id: int, db: Session = Depends(get_db)):
+    db_person = crud.get_person(db, user_id=user_id)
+    if db_person is None:
+        raise HTTPException(status_code=404, detail="Person not found")
+    return db_person
