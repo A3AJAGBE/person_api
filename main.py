@@ -19,7 +19,7 @@ def get_db():
 
 
 @app.post("/api", response_model=schemas.Person)
-def add_person(person: schemas.PersonBase, db: Session = Depends(get_db)):
+def create_person(person: schemas.PersonBase, db: Session = Depends(get_db)):
     new_person = crud.get_person_by_name(db, name=person.name)
     if new_person:
         raise HTTPException(status_code=400, detail="Name exist already")
@@ -41,7 +41,7 @@ def read_person(user_id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/api/{user_id}", response_model=schemas.Person)
-def edit_person(user_id: int, edit_person: schemas.PersonBase, db: Session = Depends(get_db)):
+def update_person(user_id: int, edit_person: schemas.PersonBase, db: Session = Depends(get_db)):
     db_person = crud.get_person(db, user_id=user_id) 
     if db_person is None:
         raise HTTPException(status_code=404, detail="Person not found")
