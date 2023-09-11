@@ -11,7 +11,7 @@ class Person(BaseModel):
 
 
 @app.get("/")
-def index():
+async def index():
     return persons
 
 
@@ -21,3 +21,8 @@ async def add_person(new_person: Person, res: Response):
     persons.append(person)
     res.status_code = 201
     return "Person added successfully"
+
+
+@app.get("/api/{id}")
+async def get_person(id: int, res: Response):
+    return persons[id-1]
