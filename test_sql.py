@@ -160,3 +160,24 @@ def test_update_person_exist():
         "detail": "Name exist already"
     }
 
+def test_delete_person():
+    create_person = client.post("/api", json={"name": "tosin adeniyo"})
+    data = create_person.json()
+    assert create_person.status_code == 200
+    user_id = data["user_id"]
+    assert create_person.json() == {
+        "name": "tosin adeniyo",
+        "user_id": 3
+    }
+    
+    res = client.delete(f"/api/{user_id}")
+    assert res.status_code == 200
+    assert res.json() == f"Person with id number: {user_id} was deleted."
+    
+
+def test_delete_person_not_found():
+    res = client.delete(f"/api/3")
+    assert res.status_code == 404
+    assert res.json() == {
+        "detail": "Person with id number: 3, not found."
+    }
