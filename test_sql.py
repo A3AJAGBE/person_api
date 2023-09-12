@@ -69,6 +69,11 @@ def test_index():
     res = client.get("/")
     assert res.status_code == 200
     
+
+def test_index_invalid():
+    res = client.get("/api")
+    assert res.status_code == 422
+    
 def test_read_person():
     res = client.get(f"/api/1")
     assert res.status_code == 200
