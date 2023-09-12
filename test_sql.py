@@ -34,19 +34,13 @@ client = TestClient(app)
 
 
 def test_create_person():
-    res = client.post("/api", json={"name": "Mark Essien"})
+    res = client.post("/api", json={"name": "mark essien"})
     data = res.json()
     assert res.status_code == 200
-    assert data["name"] == "Mark Essien"
+    assert data["name"] == "mark essien"
     assert "user_id" in data
     user_id = data["user_id"]
     assert data["user_id"] is not None
-
-    # res = client.get(f"/api/{user_id}")
-    # data = res.json()
-    # assert res.status_code == 200
-    # assert data["name"] == "Mark Essien"
-    # assert data["user_id"] == user_id
 
 def test_create_person_invalid():
     res = client.post("/api", json={"name": 8})
@@ -59,7 +53,7 @@ def test_create_person_empty():
     
 
 def test_create_person_exist():
-    res = client.post("/api", json={"name": "Mark Essien"})
+    res = client.post("/api", json={"name": "mark essien"})
     assert res.status_code == 400
     
 
@@ -71,7 +65,7 @@ def test_read_person():
     res = client.get(f"/api/1")
     assert res.status_code == 200
     assert res.json() == {
-        "name": "Mark Essien",
+        "name": "mark essien",
         "user_id": 1
     }
 
@@ -88,3 +82,24 @@ def test_read_person_invalid():
     res = client.get("/api/")
     assert res.status_code == 422
 
+
+def test_read_person_by_name():
+    res = client.get(f"/api?name=mark%20essien")
+    assert res.status_code == 200
+    assert res.json() == {
+        "name": "mark essien",
+        "user_id": 1
+    }
+
+
+def test_read_person_by_name_not_found():
+    res = client.get(f"/api?name=jane%20doe")
+    assert res.status_code == 404
+    assert res.json() == {
+        "detail": "Person not found"
+    }
+
+
+def test_read_person_by_name_invalid():
+    res = client.get(f"/api/name=jane%20doe")
+    assert res.status_code == 422
