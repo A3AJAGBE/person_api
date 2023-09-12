@@ -20,9 +20,14 @@ def get_db():
 
 @app.post("/api", response_model=schemas.Person)
 def create_person(person: schemas.PersonBase, db: Session = Depends(get_db)):
+    if person.name == "":
+        raise HTTPException(status_code=400, detail="Name can't be empty")
+    
     new_person = crud.get_person_by_name(db, name=person.name)
+    
     if new_person:
         raise HTTPException(status_code=400, detail="Name exist already")
+    
     return crud.create_person(db=db, person=person)
 
 
