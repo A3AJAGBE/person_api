@@ -67,4 +67,24 @@ def test_index():
     res = client.get("/")
     assert res.status_code == 200
     
+def test_read_person():
+    res = client.get(f"/api/1")
+    assert res.status_code == 200
+    assert res.json() == {
+        "name": "Mark Essien",
+        "user_id": 1
+    }
+
+
+def test_read_person_not_found():
+    res = client.get("/api/2")
+    assert res.status_code == 404
+    assert res.json() == {
+        "detail": "Person not found"
+        }
     
+
+def test_read_person_invalid():
+    res = client.get("/api/")
+    assert res.status_code == 422
+
