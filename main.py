@@ -55,9 +55,17 @@ def read_person_by_name(name: str, db: Session = Depends(get_db)):
 
 @app.put("/api/{user_id}", response_model=schemas.Person)
 def update_person(user_id: int, edit_person: schemas.PersonBase, db: Session = Depends(get_db)):
-    db_person = crud.get_person(db, user_id=user_id) 
+    if edit_person.name == "":
+        raise HTTPException(status_code=400, detail="Name can't be empty")
+    
+    db_person = crud.get_person(db, user_id=user_id)
+    
     if db_person is None:
         raise HTTPException(status_code=404, detail="Person not found")
+    
+    if db_person.name == edit_person.name:
+        raise HTTPException(status_code=400, detail="Name exist already")
+    
     return crud.edit_person(db=db, user_id=user_id, edit_person=edit_person)
 
 
