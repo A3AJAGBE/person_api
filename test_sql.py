@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -62,3 +63,8 @@ def test_create_person_exist():
     assert res.status_code == 400
     
 
+def test_index():
+    res = client.get("/")
+    assert res.status_code == 200
+    
+    
