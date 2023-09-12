@@ -40,6 +40,14 @@ def read_person(user_id: int, db: Session = Depends(get_db)):
     return db_person
 
 
+@app.get("/api", response_model=schemas.Person)
+def read_person_by_name(name: str, db: Session = Depends(get_db)):
+    db_person = crud.get_person_by_name(db, name=name)
+    if db_person is None:
+        raise HTTPException(status_code=404, detail="Person not found")
+    return db_person
+
+
 @app.put("/api/{user_id}", response_model=schemas.Person)
 def update_person(user_id: int, edit_person: schemas.PersonBase, db: Session = Depends(get_db)):
     db_person = crud.get_person(db, user_id=user_id) 
