@@ -31,6 +31,9 @@ app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
 
+PATTERN_ERROR_MSG = "Characters must include lowercase characters and space. Apostrophe and hyphen allowed"
+NOT_FOUND_ERROR_MEG = "Person not found"
+ALREADY_EXIST_MSG = "Name exist already"
 
 def test_create_person():
     res = client.post("/api", json={"name": "mark essien"})
@@ -54,7 +57,7 @@ def test_create_person_empty():
     res = client.post("/api", json={"name": ""})
     assert res.status_code == 400
     assert res.json() == {
-        "detail": "Name can't be empty"
+        "detail": PATTERN_ERROR_MSG
     }
     
 
@@ -62,7 +65,7 @@ def test_create_person_exist():
     res = client.post("/api", json={"name": "mark essien"})
     assert res.status_code == 400
     assert res.json() == {
-        "detail": "Name exist already"
+        "detail": ALREADY_EXIST_MSG
     }
     
 def test_index():
@@ -87,7 +90,7 @@ def test_read_person_not_found():
     res = client.get("/api/2")
     assert res.status_code == 404
     assert res.json() == {
-        "detail": "Person not found"
+        "detail": NOT_FOUND_ERROR_MEG
         }
     
 
@@ -109,7 +112,7 @@ def test_read_person_by_name_not_found():
     res = client.get(f"/api?name=jane%20doe")
     assert res.status_code == 404
     assert res.json() == {
-        "detail": "Person not found"
+        "detail": NOT_FOUND_ERROR_MEG
     }
 
 
@@ -141,7 +144,7 @@ def test_update_person_empty():
     res = client.put("/api/1", json={"name": ""})
     assert res.status_code == 400
     assert res.json() == {
-        "detail": "Name can't be empty"
+        "detail": PATTERN_ERROR_MSG
     }
     
 
@@ -149,15 +152,23 @@ def test_update_person_not_found():
     res = client.put(f"/api/20", json={"name": "toni pain"})
     assert res.status_code == 404
     assert res.json() == {
-        "detail": "Person not found"
+        "detail": NOT_FOUND_ERROR_MEG
+    }
+    
+
+def test_update_person_name_unchanged():
+    res = client.put("/api/1", json={"name": "mark essien"})
+    assert res.status_code == 400
+    assert res.json() == {
+        "detail": "No change in the name"
     }
 
 
 def test_update_person_exist():
-    res = client.put("/api/1", json={"name": "mark essien"})
+    res = client.put("/api/2", json={"name": "mark essien"})
     assert res.status_code == 400
     assert res.json() == {
-        "detail": "Name exist already"
+        "detail": ALREADY_EXIST_MSG
     }
 
 def test_delete_person():
