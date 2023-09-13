@@ -1,48 +1,4 @@
 appmap_dir: tmp/appmap
 language: python
 name: person_api
-packages:
-  - path: psycopg2
-  - path: idna
-  - path: iniconfig
-  - path: httptools
-  - path: pytest
-  - path: _yaml
-  - path: _distutils_hack
-  - path: websockets
-  - path: _pytest
-  - path: click
-  - path: h11
-  - path: anyio
-  - path: certifi
-  - path: markupsafe
-  - path: jinja2
-  - path: pluggy
-  - path: watchfiles
-  - path: uvloop
-  - path: orjson
-  - path: starlette
-  - path: multipart
-  - path: pkg_resources
-  - path: pydantic
-  - path: setuptools
-  - path: pydantic_settings
-  - path: packaging
-  - path: uvicorn
-  - path: pip
-  - path: starlette_csrf
-  - path: httpx
-  - path: yaml
-  - path: email_validator
-  - path: sqlalchemy
-  - path: dotenv
-  - path: sniffio
-  - path: httpcore
-  - path: annotated_types
-  - path: pydantic_core
-  - path: tomli
-  - path: pydantic_extra_types
-  - path: fastapi
-  - path: itsdangerous
-  - path: dns
-  - path: exceptiongroup
+packages: []
