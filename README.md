@@ -1,3 +1,4 @@
+
 # Create a REST API
 
 The second task for HNG Internship is to develop a REST API with Basic CRUD Operation.
@@ -6,8 +7,10 @@ The second task for HNG Internship is to develop a REST API with Basic CRUD Oper
 
 **Framework:** FastAPI
 
+**Server:** uvicorn
+
 **Databases:**
-SQLite (local), Postgres (production)
+SQLite (local), PostgreSQL (production)
 
 ## Run Locally
 
@@ -119,15 +122,232 @@ DELETE /api/{user_id}
 | :-------- | :------- | :------------------------- |
 | `id` | `integer` | **Required**|
 
-## Sample
+## Request and Response Format
 
-To view a detailed **Request and Response** format, click [here](https://personapi.up.railway.app/redoc).
+#### Create a person (POST)
+
+##### Request Format
 
 ```JSON
 {
-  "name": "pele soccer",
-  "user_id": 7
+  "name": "joel d'souza"
 }
+```
+
+##### Response Format (success 200)
+
+```JSON
+{
+  "name": "joel d'souza",
+  "user_id": 1
+}
+```
+
+##### Response Format (Bad Request - 400)
+
+```JSON
+{
+  "detail": "Name exist already"
+}
+```
+
+##### Request Format
+
+```JSON
+{
+  "name": "Jane Doe-Smith"
+}
+```
+
+##### Response Format (Bad Request - 400)
+
+```JSON
+{
+  "detail": "Characters must include lowercase characters and space. Apostrophe and hyphen allowed"
+}
+```
+
+#### Get a person by id (GET)
+
+##### Response Format (success 200)
+
+```JSON
+{
+  "name": "joel d'souza",
+  "user_id": 1
+}
+```
+
+##### Response Format (Not Found - 404)
+
+```JSON
+{
+  "detail": "Person not found"
+}
+```
+
+#### Get a person using name (GET)
+
+##### Response Format (success 200)
+
+```JSON
+{
+  "name": "joel d'souza",
+  "user_id": 1
+}
+```
+
+##### Response Format (Not Found - 404)
+
+```JSON
+{
+  "detail": "Person not found"
+}
+```
+
+#### Update a person (PUT)
+
+##### Request Format
+
+```JSON
+{
+  "name": "darnarys fire"
+}
+```
+
+##### Response Format (success 200)
+
+```JSON
+{
+  "name": "darnarys fire",
+  "user_id": 1
+}
+```
+
+##### Response Format (Bad Request - 400)
+
+```JSON
+{
+  "detail": "No change in the name"
+}
+```
+
+##### Response Format (Bad Request - 400)
+
+```JSON
+{
+  "detail": "Name exist already"
+}
+```
+
+##### Request Format
+
+```JSON
+{
+  "name": "Darnarys Fire"
+}
+```
+
+##### Response Format (Bad Request - 400)
+
+```JSON
+{
+  "detail": "Characters must include lowercase characters and space. Apostrophe and hyphen allowed"
+}
+```
+
+##### Response Format (Not Found - 404)
+
+```JSON
+{
+  "detail": "Person not found"
+}
+```
+
+#### Delete a person (DELETE)
+
+##### Response Format (success 200)
+
+```JSON
+"Person with id number: 1 was deleted."
+```
+
+##### Response Format (Not Found - 404)
+
+```JSON
+{
+  "detail": "Person with id number: 3, not found."
+}
+```
+
+## Sample API Usage
+
+#### Create a person
+
+``` Python
+import requests
+
+api_url = "http://127.0.0.1:8000/api"
+
+add_person = {
+    "name": "jessica pier"
+}
+
+res = requests.post(api_url, json=add_person)
+data = res.json()
+print(data)
+```
+
+#### Read a person by id
+
+``` Python
+import requests
+
+api_url = "http://127.0.0.1:8000/api/19"
+
+res = requests.get(api_url)
+data = res.json()
+print(data)
+```
+
+#### Read a person using name
+
+``` Python
+import requests
+
+api_url = "http://127.0.0.1:8000/api?name=jessica pier"
+
+res = requests.get(api_url)
+data = res.json()
+print(data)
+```
+
+#### Update a person
+
+``` Python
+import requests
+
+api_url = "http://127.0.0.1:8000/api/19"
+
+update_person = {
+    "name": "jess pier"
+}
+
+res = requests.put(api_url, json=update_person)
+data = res.json()
+print(data)
+```
+
+#### Delete a person
+
+``` Python
+import requests
+
+api_url = "http://127.0.0.1:8000/api/19"
+
+res = requests.delete(api_url)
+data = res.json()
+print(data)
 ```
 
 ## Running Tests
@@ -141,11 +361,13 @@ To run tests, run the following command
 
 ## More on documentation
 
-Check out a live interactive documentation [here](https://personapi.up.railway.app/docs). It will allow interact/test the API with ease.
+Check out a live interactive documentation [here](https://personapi.up.railway.app/api/livedocumentation). It will allow you interact/test the API with ease.
 
-## Demo
-
-This is a demo on how to go about interacting with the API.
+- Go to the page
+- Click on the dropdown button on the right side corner of each requests (POST, GET, PUT, DELETE)
+- Click on "Try it now" button, it's on the right side corner as well
+- Fill the request body (if any)
+- click on "Execute"
 
 ## Deployment
 
@@ -153,6 +375,16 @@ This API is deployed on Railway. Locally the database used is SQLite while for p
 
 psycopg2-binary was installed due to the production database.
 
+## Limitations/Assumptions
+
+- Familiarity  with Python
+- Familiarity  with git and GitHub
+- No auth Implementation for the API
+- The application was developed on  MacOS
+- Knowledge of using the command line interface (CLI)
+
 ## Appendix
 
-The "person.db" database should be deleted, if you named your database some different from "person".
+The "person.db" database should be deleted, if you named or wish to name your database some different from "person".
+
+If you are using a different device, lookup on how certain things are done. e.g creating a virtual environment.
