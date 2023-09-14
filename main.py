@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.openapi.utils import get_openapi
 import re
-PATTERN = re.compile("^([a-z]{2,}\s[a-z]{1,}'?-?[a-z]{2,}\s?([a-z]{1,})?)")
+PATTERN = re.compile(
+    "^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)")
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -24,7 +25,7 @@ def get_db():
         db.close()
 
 
-PATTERN_ERROR_MSG = "Characters must include lowercase characters and space. Apostrophe and hyphen allowed"
+PATTERN_ERROR_MSG = "Ensure there's space between first and last name. Apostrophe and hyphen allowed"
 NOT_FOUND_ERROR_MEG = "Person not found"
 ALREADY_EXIST_MSG = "Name exist already"
 
@@ -81,7 +82,7 @@ def update_person(user_id: int, edit_person: schemas.PersonBase, db: Session = D
     if db_person is None:
         raise HTTPException(status_code=404, detail=NOT_FOUND_ERROR_MEG)
 
-    if db_person.name == edit_person.name:
+    if db_person.name == edit_person.name.title():
         raise HTTPException(
             status_code=400, detail="No change in the name")
 
