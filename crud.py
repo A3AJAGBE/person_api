@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
-import models, schemas
+import models
+import schemas
 
 
 def get_person(db: Session, user_id: int):
@@ -8,7 +9,7 @@ def get_person(db: Session, user_id: int):
 
 
 def get_person_by_name(db: Session, name: str):
-    return db.query(models.Person).filter(models.Person.name == name).first()
+    return db.query(models.Person).filter(models.Person.name == name.title()).first()
 
 
 def get_persons(db: Session):
@@ -16,7 +17,7 @@ def get_persons(db: Session):
 
 
 def create_person(db: Session, person: schemas.PersonBase):
-    new_person = models.Person(name=person.name)
+    new_person = models.Person(name=person.name.title())
     db.add(new_person)
     db.commit()
     db.refresh(new_person)
@@ -26,7 +27,7 @@ def create_person(db: Session, person: schemas.PersonBase):
 def edit_person(db: Session, user_id: int, edit_person: schemas.PersonBase):
     db_person = db.query(models.Person).filter(
         models.Person.user_id == user_id).first()
-    db_person.name = edit_person.name
+    db_person.name = edit_person.name.title()
     db.commit()
     db.refresh(db_person)
     return db_person

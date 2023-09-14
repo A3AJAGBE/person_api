@@ -138,7 +138,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "name": "joel d'souza",
+  "name": "Joel D'Souza",
   "user_id": 1
 }
 ```
@@ -155,7 +155,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "name": "Jane Doe-Smith"
+  "name": "JaneDoe-Smith"
 }
 ```
 
@@ -163,7 +163,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "detail": "Characters must include lowercase characters and space. Apostrophe and hyphen allowed"
+  "detail": "Ensure there's space between first and last name. Apostrophe and hyphen allowed"
 }
 ```
 
@@ -173,7 +173,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "name": "joel d'souza",
+  "name": "Joel D'Souza",
   "user_id": 1
 }
 ```
@@ -192,7 +192,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "name": "joel d'souza",
+  "name": "Joel D'Souza",
   "user_id": 1
 }
 ```
@@ -219,7 +219,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "name": "darnarys fire",
+  "name": "Darnarys Fire",
   "user_id": 1
 }
 ```
@@ -244,7 +244,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "name": "Darnarys Fire"
+  "name": "DarnarysFire"
 }
 ```
 
@@ -252,7 +252,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "detail": "Characters must include lowercase characters and space. Apostrophe and hyphen allowed"
+  "detail": "Ensure there's space between first and last name. Apostrophe and hyphen allowed"
 }
 ```
 

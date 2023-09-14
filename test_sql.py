@@ -13,7 +13,8 @@ engine = create_engine(
     connect_args={"check_same_thread": False},
     poolclass=StaticPool
 )
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine)
 
 
 Base.metadata.create_all(bind=engine)
@@ -31,27 +32,29 @@ app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
 
-PATTERN_ERROR_MSG = "Characters must include lowercase characters and space. Apostrophe and hyphen allowed"
+PATTERN_ERROR_MSG = "Ensure there's space between first and last name. Apostrophe and hyphen allowed"
 NOT_FOUND_ERROR_MEG = "Person not found"
 ALREADY_EXIST_MSG = "Name exist already"
+
 
 def test_create_person():
     res = client.post("/api", json={"name": "mark essien"})
     data = res.json()
     assert res.status_code == 200
-    assert data["name"] == "mark essien"
+    assert data["name"] == "Mark Essien"
     assert "user_id" in data
     user_id = data["user_id"]
     assert data["user_id"] is not None
     assert res.json() == {
-        "name": "mark essien",
+        "name": "Mark Essien",
         "user_id": 1
     }
+
 
 def test_create_person_invalid():
     res = client.post("/api", json={"name": 8})
     assert res.status_code == 422
-    
+
 
 def test_create_person_empty():
     res = client.post("/api", json={"name": ""})
@@ -59,7 +62,7 @@ def test_create_person_empty():
     assert res.json() == {
         "detail": PATTERN_ERROR_MSG
     }
-    
+
 
 def test_create_person_exist():
     res = client.post("/api", json={"name": "mark essien"})
@@ -67,21 +70,23 @@ def test_create_person_exist():
     assert res.json() == {
         "detail": ALREADY_EXIST_MSG
     }
-    
+
+
 def test_index():
     res = client.get("/")
     assert res.status_code == 200
-    
+
 
 def test_index_invalid():
     res = client.get("/api")
     assert res.status_code == 422
-    
+
+
 def test_read_person():
     res = client.get(f"/api/1")
     assert res.status_code == 200
     assert res.json() == {
-        "name": "mark essien",
+        "name": "Mark Essien",
         "user_id": 1
     }
 
@@ -91,8 +96,8 @@ def test_read_person_not_found():
     assert res.status_code == 404
     assert res.json() == {
         "detail": NOT_FOUND_ERROR_MEG
-        }
-    
+    }
+
 
 def test_read_person_invalid():
     res = client.get("/api/")
@@ -103,7 +108,7 @@ def test_read_person_by_name():
     res = client.get(f"/api?name=mark%20essien")
     assert res.status_code == 200
     assert res.json() == {
-        "name": "mark essien",
+        "name": "Mark Essien",
         "user_id": 1
     }
 
@@ -127,15 +132,15 @@ def test_update_person():
     assert create_person.status_code == 200
     user_id = data["user_id"]
     assert create_person.json() == {
-        "name": "doyin lawal",
+        "name": "Doyin Lawal",
         "user_id": 2
     }
-    
+
     res = client.put(f"/api/{user_id}", json={"name": "bisi adekunmi"})
     update_data = res.json()
     assert res.status_code == 200
     assert res.json() == {
-        "name": "bisi adekunmi",
+        "name": "Bisi Adekunmi",
         "user_id": 2
     }
 
@@ -146,7 +151,7 @@ def test_update_person_empty():
     assert res.json() == {
         "detail": PATTERN_ERROR_MSG
     }
-    
+
 
 def test_update_person_not_found():
     res = client.put(f"/api/20", json={"name": "toni pain"})
@@ -154,7 +159,7 @@ def test_update_person_not_found():
     assert res.json() == {
         "detail": NOT_FOUND_ERROR_MEG
     }
-    
+
 
 def test_update_person_name_unchanged():
     res = client.put("/api/1", json={"name": "mark essien"})
@@ -171,20 +176,21 @@ def test_update_person_exist():
         "detail": ALREADY_EXIST_MSG
     }
 
+
 def test_delete_person():
     create_person = client.post("/api", json={"name": "tosin adeniyo"})
     data = create_person.json()
     assert create_person.status_code == 200
     user_id = data["user_id"]
     assert create_person.json() == {
-        "name": "tosin adeniyo",
+        "name": "Tosin Adeniyo",
         "user_id": 3
     }
-    
+
     res = client.delete(f"/api/{user_id}")
     assert res.status_code == 200
     assert res.json() == f"Person with id number: {user_id} was deleted."
-    
+
 
 def test_delete_person_not_found():
     res = client.delete(f"/api/3")
