@@ -32,7 +32,7 @@ app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
 
-PATTERN_ERROR_MSG = "Ensure there's space between first and last name. Apostrophe and hyphen allowed"
+PATTERN_ERROR_MSG = "Invalid name input"
 NOT_FOUND_ERROR_MEG = "Person not found"
 ALREADY_EXIST_MSG = "Name exist already"
 
@@ -146,7 +146,7 @@ def test_update_person():
 
 
 def test_update_person_empty():
-    res = client.put("/api/1", json={"name": ""})
+    res = client.put("/api/1", json={"name": "solomon!"})
     assert res.status_code == 400
     assert res.json() == {
         "detail": PATTERN_ERROR_MSG

@@ -146,7 +146,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "name": "JaneDoe-Smith"
+  "name": "JaneDoe-Smith!"
 }
 ```
 
@@ -154,7 +154,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "detail": "Ensure there's space between first and last name. Apostrophe and hyphen allowed"
+  "detail": "Invalid name input"
 }
 ```
 
@@ -235,7 +235,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "name": "DarnarysFire"
+  "name": " DarnarysFire"
 }
 ```
 
@@ -243,7 +243,7 @@ DELETE /api/{user_id}
 
 ```JSON
 {
-  "detail": "Ensure there's space between first and last name. Apostrophe and hyphen allowed"
+  "detail": "Invalid name input"
 }
 ```
 
