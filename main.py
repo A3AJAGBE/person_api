@@ -6,8 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.openapi.utils import get_openapi
 import re
-PATTERN = re.compile(
-    "^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)")
+PATTERN = re.compile("^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$")
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -25,7 +24,7 @@ def get_db():
         db.close()
 
 
-PATTERN_ERROR_MSG = "Ensure there's space between first and last name. Apostrophe and hyphen allowed"
+PATTERN_ERROR_MSG = "Invalid name input"
 NOT_FOUND_ERROR_MEG = "Person not found"
 ALREADY_EXIST_MSG = "Name exist already"
 
